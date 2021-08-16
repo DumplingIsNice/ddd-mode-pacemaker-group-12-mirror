@@ -52,6 +52,7 @@ Mkfile.old
 dkms.conf
 
 # SCChart Ignored directories
-.metadata/
-.project/
+*.metadata/
+*.project/
 SCCharts/Pacemaker/.project
+Nios II/Eclipse/RemoteSystemsTempFiles/.project
