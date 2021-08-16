@@ -1,0 +1,34 @@
+scchart NewSCChart {
+  input signal AS, VS
+  output signal AP, VP
+  
+
+  
+  bool bPVARP_Elapsed, AEI_Elapsed
+
+//  region A_Pace{
+//    initial state PVARP_Period
+//    if bPVARP_Elapsed go to DetectA
+//    state DetectA
+//    if AEI_Elapsed go to PaceA
+//    state PaceA
+//    immediate go to PVARP_Period
+//  }
+  
+  region PVARP_Timer {
+    int tPVARP = 0
+    int T_PVARP = 100
+    
+    initial state PVARP_Elapsed{
+      entry do bPVARP_Elapsed = true
+    }
+    
+    if VP || VS go to Waiting
+    
+    state Waiting {
+      entry do tPVARP = 0; bPVARP_Elapsed = false
+      during do tPVARP += 0
+    }
+    if tPVARP > T_PVARP go to PVARP_Elapsed
+  }
+}
