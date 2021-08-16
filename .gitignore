@@ -55,4 +55,15 @@ dkms.conf
 *.metadata/
 *.project/
 SCCharts/Pacemaker/.project
-Nios II/Eclipse/RemoteSystemsTempFiles/.project
+
+# Eclipse C project
+*.cproject
+*.project
+*.xml
+*.objdump
+**/Makefile
+**/create-this-app
+
+!**/Pacemaker_bsp
+
+
