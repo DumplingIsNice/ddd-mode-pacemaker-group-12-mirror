@@ -54,6 +54,7 @@ dkms.conf
 # SCChart Ignored directories
 *.metadata/
 *.project/
+*KIELER-Temp/
 SCCharts/Pacemaker/.project
 
 # Eclipse C project
