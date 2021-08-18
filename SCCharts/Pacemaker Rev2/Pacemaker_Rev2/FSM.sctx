@@ -1,0 +1,73 @@
+//@ClocksUseSD
+scchart Pacemaker_Rev2 {
+  
+  input signal AS, VS
+  output signal AP, VP
+  
+  int T_VRP, T_VARP, T_URI, T_LRI
+  //clock tVRP, tRI
+
+  region VS {
+    bool bVRP_Elapsed
+    bool bURI_Elapsed, bLRI_Elapsed
+    
+    // Wait for VRP to elapse and then detect VS
+    
+    initial state VRP_Detect
+    {
+      region VRP
+      {
+        clock tVRP
+        
+        initial state Waiting {
+          entry do tVRP = 0; bVRP_Elapsed = false
+        }
+        
+        if tVRP >= T_VRP go to VRP_Elapsed
+        
+        final state VRP_Elapsed {
+          entry do bVRP_Elapsed = true
+        }
+      }
+      
+//      region RI
+//      {
+//        clock tRI
+//        
+//        initial state Start {
+//          entry do tRI = 0; bURI_Elapsed = false; bLRI_Elapsed = false
+//        }
+//        
+//        if tRI >= T_URI go to URI_Elapsed
+//        
+//        state URI_Elapsed {
+//          entry do bURI_Elapsed = true; bLRI_Elapsed = false
+//        }
+//
+//        if tRI >= T_LRI go to LRI_Elapsed
+//        
+//        final state LRI_Elapsed {
+//          entry do bURI_Elapsed = true; bLRI_Elapsed = true
+//        }
+//      }
+    }
+    
+    // NOTE: The issue was in using non-pre values
+    // This is as the inner states are emitting values that the outer states read.
+    // Remember that there is no history (without pre()), it is just trying to schedule sequentially.
+	// Scheduling attempts emit/write, then read
+    
+    // TA NOTE: May actually be evaluated outside -> in. This is why weak aborts do not work as anticipated.
+    
+    
+    if (VS & pre(bVRP_Elapsed)) go to VRP_Detect
+    if (pre(bLRI_Elapsed)) go to Pace_VP
+    
+    // Pace VP
+    final state Pace_VP
+    {
+      entry do VP
+    }
+
+  }
+}
