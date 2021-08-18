@@ -3,16 +3,21 @@ scchart Pacemaker_FMS {
 input signal    VS, AS  // external
 output signal    VP, AP  // internal
 
+bool  PVARP_Elapsed = false, VRP_Elapsed = false
+bool  AEI_Elapsed = false, AVI_Elapsed = false
+bool  URI_Elapsed = false, LRI_Elapsed = false
+
 /**
        * NOTE: Is pre() okay?
        * Potential edge case where VS||VP is detected in the tick XX_Elapses, but does not register
        * (due to the bool XX_Elapsed not having updated).
+       * 
+       * If we have fixed ticks we could decrease the T_XX value by one tick to account for the tick
+       * delay introduced by pre().
        */
-  region Timers {
-    bool  PVARP_Elapsed = false, VRP_Elapsed = false
-    bool  AEI_Elapsed = false, AVI_Elapsed = false
-    bool  URI_Elapsed = false, LRI_Elapsed = false
-    
+       
+  /* TIMERS */
+  region Timers {    
     region rPVARP {
       initial state sPVARP {
         clock tPVARP          = 0
@@ -105,4 +110,52 @@ output signal    VP, AP  // internal
     }
   }
   
+  /*
+   * TODO:
+   * !Fix compilation issue due to sequential ordering!
+   * Currently we are writing to VP inside of the VP state-machine, which is run in parallel with the timers.
+   * VP is dependent on reading pre(VRP_Elapsed). However, VRP_Elapsed is dependent on reading VP.
+   * Thus we have a sequential scheduling issue.
+   * 
+   * To resolve this we either need to use a combination of pre() (bad! no more tick delays!) or rearrange the
+   * dependencies to resolve all writes before reading.
+   */
+  /* VP */
+  region VP {
+    initial state sVP {
+      //
+      initial state Detect_VS {
+      }
+      if (LRI_Elapsed) go to Pace_VP
+      if (AVI_Elapsed && URI_Elapsed) go to Pace_VP
+      //
+      state Pace_VP {
+        entry do VP
+      }
+      immediate go to Detect_VS
+    }
+    /**
+     * pre() of VRP_Elapsed doesn't actually need to be used here, as it
+     * is read only. However, upstream the future value of VRP_Elapsed is
+     * decided by pre(VRP_Elapsed). Thus we use it here for clarity.
+     * Adding or removing pre() here should have no change.
+     */
+    if (VS && pre(VRP_Elapsed)) abort to sVP
+  }
+  
+  /* AP */
+  region AP {
+    initial state sAP {
+      //
+      initial state Detect_AS {
+      }
+      if (AEI_Elapsed) go to Pace_AP
+      //
+      state Pace_AP {
+        entry do AP
+      }
+      immediate go to Detect_AS
+    }
+    if (AS && pre(PVARP_Elapsed)) abort to sAP
+  }
 }
