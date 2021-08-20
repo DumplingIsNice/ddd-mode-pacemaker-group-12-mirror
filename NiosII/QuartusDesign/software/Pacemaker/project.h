@@ -18,6 +18,8 @@
 #include <altera_avalon_pio_regs.h>
 // Standard I/O
 #include <stdio.h>
+// Delay functions
+#include <unistd.h>
 
 // Custom API Libraries
 #include "buttons.h"
