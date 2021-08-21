@@ -1,4 +1,37 @@
 scchart Pacemaker_FMS {
+  
+  /*
+   * This version of our logic was designed from a synchronous hardware
+   * perspective, more suitable for FPGA. As a result we encountered
+   * issues attempting to convert our combinational logic into
+   * sequentially constructed logic.
+   * 
+   * Many of these issues involved our timer logic and the use of reset
+   * (strong abort) transitions.
+   * 
+   * The tick delay introduced by our use of pre() to attempt to get around
+   * scheduling issues created impractical and potentially unacceptable
+   * delays, wherein the VRP_Elapsed and AVRP_Elapsed values viewed by the
+   * model would always be one tick behind their actual values.
+   * 
+   * This would cause refractory signals VR and AR to be accepted as VS or
+   * AS signals in the case that they occurred a tick after the actual VS
+   * or AS signals. While in practice a maximum delay of 2 ticks between
+   * the ideal signal output and the model signal output would not be a
+   * critical issue given an appropriately small tick period, this would
+   * be a cause for concern for future revisions involving different tick
+   * periods or dynamic tick logic.
+   * 
+   * Similarly, a VR or AR being registered as VS or AS currently does not
+   * have implications beyond re-triggering strong abort transitions (and
+   * introducing a one tick inaccuracy) but could become a major issue if
+   * related logic or timing were to change in the future.
+   * 
+   * These issues are addressed in the next revision, 'FSM_Rev3.sctx'.
+   * 
+   */
+  
+  
 
 input signal    VS, AS  // external
 output signal    VP, AP  // internal
@@ -17,7 +50,19 @@ bool  URI_Elapsed = false, LRI_Elapsed = false
        */
        
   /* TIMERS */
-  region Timers {    
+  region Timers {        
+    /*
+     * === OUTDATED: REPLACED BY 1-LEVEL FSM MODEL IN FSM_REV3.sctx ===
+     * 
+     * Reliance on the strong abort transition in a higher-state resulted in
+     * sequential ordering challenges due to the lower-state FSM attempting
+     * to emit a value (XX_Elapsed), which also needed to be read by the
+     * strong abort's conditional transition logic.
+     * Due to the strong abort needing to be evaluated first, but all write
+     * instructions needing to occur before read instructions, a scheduling
+     * error arose. 
+     */
+    
     region rPVARP {
       initial state sPVARP {
         clock tPVARP          = 0
@@ -111,6 +156,8 @@ bool  URI_Elapsed = false, LRI_Elapsed = false
   }
   
   /*
+   * === RESOLVED IN FSM_Rev3.sctx ===
+   * 
    * TODO:
    * !Fix compilation issue due to sequential ordering!
    * Currently we are writing to VP inside of the VP state-machine, which is run in parallel with the timers.
