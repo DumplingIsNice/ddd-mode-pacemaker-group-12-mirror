@@ -14,40 +14,30 @@ bool  URI_Elapsed = false, LRI_Elapsed = false
       clock     tPVARP  = 0
       const int T_PVARP = 10
       
-      initial state Initial {
+      initial state Counting {
         entry do tPVARP = 0; PVARP_Elapsed = false
-      }
-      immediate go to Counting
-      //
-      state Counting {
-        entry do PVARP_Elapsed = false
       }
       if tPVARP >= T_PVARP go to Elapsed
       //
       state Elapsed {
         entry do PVARP_Elapsed = true
       }
-      if (VS||VP) go to Initial
+      if (VS||VP) go to Counting
     }
     
     region VRP {
       clock     tVRP  = 0
       const int T_VRP = 10
       
-      initial state Initial {
+      initial state Counting {
         entry do tVRP = 0; VRP_Elapsed = false
-      }
-      immediate go to Counting
-      //
-      state Counting {
-        entry do VRP_Elapsed = false
       }
       if tVRP >= T_VRP go to Elapsed
       //
       state Elapsed {
         entry do VRP_Elapsed = true
       }
-      if (VS||VP) go to Initial
+      if (VS||VP) go to Counting
     }
     
     region rAEI {
