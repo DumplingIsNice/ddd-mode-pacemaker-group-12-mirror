@@ -7,6 +7,8 @@ bool  PVARP_Elapsed = false, VRP_Elapsed = false
 bool  AEI_Elapsed = false, AVI_Elapsed = false
 bool  URI_Elapsed = false, LRI_Elapsed = false
 
+float myDeltaT
+
        
   /* TIMERS */
   region Timers {    
@@ -14,64 +16,88 @@ bool  URI_Elapsed = false, LRI_Elapsed = false
       clock     tPVARP  = 0
       const int T_PVARP = 10
       
-      initial state Counting {
+      initial state CountingPostVS {
         entry do tPVARP = 0; PVARP_Elapsed = false
       }
       if tPVARP >= T_PVARP go to Elapsed
-      //
+      
+      state CountingPostVP {
+        entry do tPVARP = myDeltaT; PVARP_Elapsed = false
+      }
+      if tPVARP >= T_PVARP go to Elapsed
+      
       state Elapsed {
         entry do PVARP_Elapsed = true
       }
-      if (VS||VP) go to Counting
+      if (VS) go to CountingPostVS
+      if (pre(VP)) go to CountingPostVP
     }
     
     region VRP {
       clock     tVRP  = 0
       const int T_VRP = 10
       
-      initial state Counting {
+      initial state CountingPostVS {
         entry do tVRP = 0; VRP_Elapsed = false
       }
       if tVRP >= T_VRP go to Elapsed
-      //
+      
+      state CountingPostVP {
+        entry do tVRP = myDeltaT; VRP_Elapsed = false
+      }
+      if tVRP >= T_VRP go to Elapsed
+      
       state Elapsed {
         entry do VRP_Elapsed = true
       }
-      if (VS||VP) go to Counting
+      if (VS) go to CountingPostVS
+      if (pre(VP)) go to CountingPostVP
     }
     
     region rAEI {
       initial state sAEI {
         clock tAEI        = 0
         const int T_AEI   = 6
-        //
+        
         initial state Counting {
           entry do tAEI = 0; AEI_Elapsed = false
         }
+        immediate if pre(VP) go to CountingPostVP
         if tAEI >= T_AEI go to Elapsed
-        //
+        
+        state CountingPostVP {
+          entry do tAEI = myDeltaT
+        }
+        if tAEI >= T_AEI go to Elapsed
+        
         final state Elapsed {
           entry do AEI_Elapsed = true
         }
       }
-      if ((VS||VP) && VRP_Elapsed) abort to sAEI
+      if ((VS||pre(VP)) && VRP_Elapsed) abort to sAEI
     }
     
     region rAVI {
       initial state sAVI {
         clock tAVI      = 0
         const int T_AVI = 4
-        //
+        
         initial state Counting {
           entry do tAVI = 0; AVI_Elapsed = false
         }
+        immediate if pre(AP) go to CountingPostVP
         if tAVI >= T_AVI go to Elapsed
-        //
+        
+        state CountingPostVP {
+          entry do tAVI = myDeltaT
+        }
+        if tAVI >= T_AVI go to Elapsed
+        
         final state Elapsed {
           entry do AVI_Elapsed = true
         }
       }
-      if ((AS||AP) && PVARP_Elapsed) abort to sAVI
+      if ((AS||pre(AP)) && PVARP_Elapsed) abort to sAVI
     }
     
     region rRI {
@@ -83,8 +109,14 @@ bool  URI_Elapsed = false, LRI_Elapsed = false
         initial state Start {
           entry do tRI = 0; URI_Elapsed = false; LRI_Elapsed = false
         }
+        immediate if pre(VP) go to StartPostVP
         if tRI >= T_URI go to URI_Fin
-        //
+        
+        state StartPostVP {
+          entry do tRI = myDeltaT
+        }
+        if tRI >= T_URI go to URI_Fin
+        
         state URI_Fin {
           entry do URI_Elapsed = true
         }
@@ -94,20 +126,10 @@ bool  URI_Elapsed = false, LRI_Elapsed = false
           entry do LRI_Elapsed = true
         }
       }
-      if ((VS||VP) && VRP_Elapsed) abort to sRI
+      if ((VS||pre(VP)) && VRP_Elapsed) abort to sRI
     }
   }
   
-  /*
-   * TODO:
-   * !Fix compilation issue due to sequential ordering!
-   * Currently we are writing to VP inside of the VP state-machine, which is run in parallel with the timers.
-   * VP is dependent on reading pre(VRP_Elapsed). However, VRP_Elapsed is dependent on reading VP.
-   * Thus we have a sequential scheduling issue.
-   * 
-   * To resolve this we either need to use a combination of pre() (bad! no more tick delays!) or rearrange the
-   * dependencies to resolve all writes before reading.
-   */
   /* VP */
   region VP {
     initial state sVP {
@@ -122,12 +144,6 @@ bool  URI_Elapsed = false, LRI_Elapsed = false
       }
       immediate go to Detect_VS
     }
-    /**
-     * pre() of VRP_Elapsed doesn't actually need to be used here, as it
-     * is read only. However, upstream the future value of VRP_Elapsed is
-     * decided by pre(VRP_Elapsed). Thus we use it here for clarity.
-     * Adding or removing pre() here should have no change.
-     */
     if (VS && VRP_Elapsed) abort to sVP
   }
   
