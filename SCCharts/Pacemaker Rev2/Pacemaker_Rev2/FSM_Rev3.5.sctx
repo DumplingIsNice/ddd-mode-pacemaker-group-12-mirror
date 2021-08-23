@@ -1,0 +1,180 @@
+scchart FSM_Rev3.5 {
+  
+  // Current expected pulse period is 12 ticks/pulse.
+  
+  input signal    VS, AS   // external
+  output signal    VP, AP  // internal
+  
+  bool  PVARP_Elapsed = false, VRP_Elapsed = false
+  bool  AEI_Elapsed = false, AVI_Elapsed = false
+  bool  URI_Elapsed = false, LRI_Elapsed = false
+  
+  float myDeltaT = 1
+  
+  // Region used for organization purpose
+  region timers {
+    
+    // PVARP - Post any V event, ignore any A event
+    region PVARP {
+      clock     tPVARP  = 0
+      const int T_PVARP = 8
+      
+      /* On Boot:
+       * - AEI, AVI reset and counting.
+       * - RI timer reset and counting.
+       * - Cannot know if there is VS, AS event before boot.
+       *    - Assume there WAS VS, AS event prior to boot.
+       *    - Hence, boot with Refractory Period.
+       */ 
+      
+      initial state CountingPostVS {
+        entry do tPVARP = 0; PVARP_Elapsed = false
+      }
+      if tPVARP >= T_PVARP go to Elapsed
+      
+      state CountingPostVP {
+        entry do tPVARP = myDeltaT; PVARP_Elapsed = false
+      }
+      if tPVARP >= T_PVARP go to Elapsed
+      
+      state Elapsed {
+        entry do PVARP_Elapsed = true
+      }
+      if (VS) go to CountingPostVS
+      if (pre(VP)) go to CountingPostVP
+    }
+    
+    // VARP - Post any V event, ignore any V event
+    region VRP {
+      clock     tVRP  = 0
+      const int T_VRP = 8
+      
+      initial state CountingPostVS {
+        entry do tVRP = 0; VRP_Elapsed = false
+      }
+      if tVRP >= T_VRP go to Elapsed
+      
+      state CountingPostVP {
+        entry do tVRP = myDeltaT; VRP_Elapsed = false
+      }
+      if tVRP >= T_VRP go to Elapsed
+      
+      state Elapsed {
+        entry do VRP_Elapsed = true
+      }
+      if (VS) go to CountingPostVS
+      if (pre(VP)) go to CountingPostVP
+    }
+  
+  // AEI - When elapsed, must generate AP
+  // Resets on any V event.
+  region rAEI {
+      initial state sAEI {
+        clock tAEI        = 0
+        const int T_AEI   = 6
+        
+        initial state Counting {
+          entry do tAEI = myDeltaT; AEI_Elapsed = false
+        }
+        if tAEI >= T_AEI go to Elapsed
+        
+        state Elapsed {
+          entry do AEI_Elapsed = true
+        }
+        if AEI_Elapsed == true go to Done
+        
+        // Necessary to reset AEI to protect Pace_AP loop.
+        // Pace_VP loop is protected by RI timer, regardless of AVI.
+        final state Done {
+          entry do AEI_Elapsed = false
+        }
+      }
+      
+      // Must use previous value - VP resets RP timers.
+      // Will read incorrect (now in Counting) value of RP_Elapsed flags.
+      // Similar logic to pre() in AVI, AEI and RI timer.      
+      if ((VS||pre(VP)) && pre(VRP_Elapsed)) abort to sAEI
+    }
+
+    // AVI - When elapsed, must generate VP
+    // Resets on any A event.    
+    region rAVI {
+      initial state sAVI {
+        clock tAVI      = 0
+        const int T_AVI = 4
+        
+        initial state Counting {
+          entry do tAVI = myDeltaT; AVI_Elapsed = false
+        }
+        if tAVI >= T_AVI go to Elapsed
+        
+        state Elapsed {
+          entry do AVI_Elapsed = true
+        }
+
+      }
+      
+      // Must use previous value - VP resets RP timers.
+      // Similar logic to pre() in AVI, AEI and RI timer.
+      if ((AS||pre(AP)) && pre(PVARP_Elapsed)) abort to sAVI
+    }
+  
+    // Combined LRI, URI region.
+    // URI - Until elapsed, do not allow generation of VP.
+    // LRI - When elapsed, must generate VP.
+    region rRI {
+      initial state sRI {
+        clock tRI       = 0
+        const int T_URI = 12
+        const int T_LRI = 16
+        //
+        initial state Start {
+          entry do tRI = myDeltaT; URI_Elapsed = false; LRI_Elapsed = false
+        }
+        if tRI >= T_URI go to URI_Fin
+        
+        state URI_Fin {
+          entry do URI_Elapsed = true
+        }
+        if tRI >= T_LRI go to LRI_Fin
+        //
+        state LRI_Fin {
+          entry do LRI_Elapsed = true
+        }
+      }
+      
+      // Must use previous value - VP resets RP timers.
+      // Similar logic to pre() in AVI, AEI and RI timer.      
+      if ((VS||pre(VP)) && pre(VRP_Elapsed)) abort to sRI
+     }
+   }
+
+   // V_Pulse Generator.
+   // Consumer of timer control signal.
+   // Drives A_Pulse.
+   region VP_GEN {
+      initial state Ready_V {
+      }
+      if (LRI_Elapsed) go to Pace_VP
+      if (URI_Elapsed && AVI_Elapsed) go to Pace_VP
+
+      state Pace_VP {
+        entry do VP
+      }
+      immediate go to Ready_V
+   }
+   
+   // A_Pulse Generator.
+   // Consumer of timer control signal
+   // Driven by V_Pulse.
+   region AP_GEN {
+    initial state Ready_A {
+    }
+    if (AEI_Elapsed) go to Pace_AP
+    //
+    state Pace_AP {
+      entry do AP
+    }
+    immediate go to Ready_A
+  }
+}
