@@ -9,7 +9,13 @@ scchart FSM_Rev3.5 {
   bool  AEI_Elapsed = false, AVI_Elapsed = false
   bool  URI_Elapsed = false, LRI_Elapsed = false
   
+  // Defined Values
+  // Note: const values are optimized (directly inserted into compiled code) 
+  // Hence, a definable value is declared here to create an interact-able struct field
   float myDeltaT = 1
+  float D_T_PVARP = 8, D_T_VRP = 8
+  float D_T_AEI = 6, D_T_AVI = 4
+  float D_T_URI = 12, D_T_LRI = 16
   
   // Region used for organization purpose
   region timers {
@@ -17,7 +23,7 @@ scchart FSM_Rev3.5 {
     // PVARP - Post any V event, ignore any A event
     region PVARP {
       clock     tPVARP  = 0
-      const int T_PVARP = 8
+      const int T_PVARP = D_T_PVARP
       
       /* On Boot:
        * - AEI, AVI reset and counting.
@@ -47,7 +53,7 @@ scchart FSM_Rev3.5 {
     // VARP - Post any V event, ignore any V event
     region VRP {
       clock     tVRP  = 0
-      const int T_VRP = 8
+      const int T_VRP = D_T_VRP
       
       initial state CountingPostVS {
         entry do tVRP = 0; VRP_Elapsed = false
@@ -71,7 +77,7 @@ scchart FSM_Rev3.5 {
   region rAEI {
       initial state sAEI {
         clock tAEI        = 0
-        const int T_AEI   = 6
+        const int T_AEI   = D_T_AEI
         
         initial state Counting {
           entry do tAEI = myDeltaT; AEI_Elapsed = false
@@ -101,7 +107,7 @@ scchart FSM_Rev3.5 {
     region rAVI {
       initial state sAVI {
         clock tAVI      = 0
-        const int T_AVI = 4
+        const int T_AVI = D_T_AVI
         
         initial state Counting {
           entry do tAVI = myDeltaT; AVI_Elapsed = false
@@ -125,8 +131,8 @@ scchart FSM_Rev3.5 {
     region rRI {
       initial state sRI {
         clock tRI       = 0
-        const int T_URI = 12
-        const int T_LRI = 16
+        const int T_URI = D_T_URI
+        const int T_LRI = D_T_LRI
         //
         initial state Start {
           entry do tRI = myDeltaT; URI_Elapsed = false; LRI_Elapsed = false
