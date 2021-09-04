@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "library.hpp"
 
 // What are the chars? int
@@ -82,6 +83,19 @@ int main(int, char**) {
     data.deltaT = 1;
     data.sleepT = 0;
 
+    // Setup file to write result in
+    std::ofstream matlabFile;
+    matlabFile.open ("matlab_data.csv");
+    matlabFile << "Time, A, V\n";
+
+    std::ofstream graphFile;
+    graphFile.open ("graph_data.csv");
+    graphFile << "Tick, AP, VP, AS, VS, AVI, AEI, tPVARP, tVRP, tRI\n";
+
+    // Buffer for writing results
+    int aA[ARRAY_SIZE] = {};
+    int aV[ARRAY_SIZE] = {};
+
     int i = 0;
     while(i < ARRAY_SIZE)
     {
@@ -110,29 +124,43 @@ int main(int, char**) {
       printf("tPVARP: %f\n", tPVARP);
       printf("tVRP: %f\n", tVRP);
       printf("################################################\n");
+
+      // Writing to a .csv file
+      aA[i] = aAS[i] || aAP[i];
+      aV[i] = aVS[i] || aVP[i];
+
+      matlabFile << i+1 << "," << aA[i] << "," << aV[i] << "\n";
+
+      graphFile << i+1 << "," << aAP[i] << "," << aVP[i] << "," << aAS[i] << "," << aVS[i] << "," << aAVI[i] << "," << aAEI[i] << "," << aPVARP[i] << "," << aVRP[i] << "," << aRI[i] << "\n";
       i += 1;
     }
 
-    printf("################ DATA FOR EXCEL ################\n");
-    printf("################# INPUT/OUTPUT #################\n");
-    printf("AP:, ");
-    printArray(aAP, ARRAY_SIZE);
-    printf("VP:, ");
-    printArray(aVP, ARRAY_SIZE);
-    printf("AS:, ");
-    printArray(aAS, ARRAY_SIZE);
-    printf("VP:, ");
-    printArray(aVS, ARRAY_SIZE);
-    printf("################# TIMERS ################# \n");
-    printf("AVI:, ");
-    printArray(aAVI, ARRAY_SIZE);
-    printf("AEI:, ");
-    printArray(aAEI, ARRAY_SIZE);
-    printf("tPVARP:, ");
-    printArray(aPVARP, ARRAY_SIZE);
-    printf("tVRP:, ");
-    printArray(aVRP, ARRAY_SIZE);
-    printf("tRI:, ");
-    printArray(aRI, ARRAY_SIZE);
+    matlabFile.close();
+    graphFile.close();
+
+    // printf("################ DATA FOR EXCEL ################\n");
+    // printf("################# INPUT/OUTPUT #################\n");
+    // printf("AP:, ");
+    // printArray(aAP, ARRAY_SIZE);
+    // printf("VP:, ");
+    // printArray(aVP, ARRAY_SIZE);
+    // printf("AS:, ");
+    // printArray(aAS, ARRAY_SIZE);
+    // printf("VP:, ");
+    // printArray(aVS, ARRAY_SIZE);
+    // printf("################# TIMERS ################# \n");
+    // printf("AVI:, ");
+    // printArray(aAVI, ARRAY_SIZE);
+    // printf("AEI:, ");
+    // printArray(aAEI, ARRAY_SIZE);
+    // printf("tPVARP:, ");
+    // printArray(aPVARP, ARRAY_SIZE);
+    // printf("tVRP:, ");
+    // printArray(aVRP, ARRAY_SIZE);
+    // printf("tRI:, ");
+    // printArray(aRI, ARRAY_SIZE);
+
+    return 0;
+
 }
 
