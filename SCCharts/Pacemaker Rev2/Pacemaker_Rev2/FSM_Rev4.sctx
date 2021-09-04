@@ -86,32 +86,29 @@ scchart FSM_Rev4 {
   // AEI - When elapsed, must generate AP
   // Resets on any V event.
   region rAEI {
-      initial state sAEI {
-        clock tAEI        = 0
-        const int T_AEI   = AEI_CONFIG
-        
-        initial state Counting {
-          entry do tAEI = globalDeltaT; AEI_Elapsed = false
-        }
-        if tAEI >= T_AEI go to Elapsed
-        
-        state Elapsed {
-          entry do AEI_Elapsed = true
-        }
-        if AEI_Elapsed == true go to Done
-        
-        // Necessary to reset AEI to protect Pace_AP loop.
-        // Pace_VP loop is protected by RI timer, regardless of AVI.
-        final state Done {
-          entry do AEI_Elapsed = false
-        }
-      }
+      clock tAEI        = 0
+      const int T_AEI   = AEI_CONFIG
       
-      // Must use previous value - VP resets RP timers.
-      // Will read incorrect (now in Counting) value of RP_Elapsed flags.
-      // Similar logic to pre() in AVI, AEI and RI timer.      
-      if ((VS||pre(VP)) && pre(VRP_Elapsed)) abort to sAEI
+      initial state Start {
+        entry do tAEI = globalDeltaT; AEI_Elapsed = false
+      }
+      if AS && PVARP_Elapsed go to Finished
+      if tAEI >= T_AEI go to Elapsed
+      
+      state Elapsed {
+        entry do AEI_Elapsed = true
+      }
+      /**
+       * one tick delay
+       */
+      if AEI_Elapsed == true go to Finished
+      
+      state Finished {
+        entry do AEI_Elapsed = false
+      }
+      if (VS||VP) && VRP_Elapsed go to Start
     }
+    
 
     // AVI - When elapsed, must generate VP
     // Resets on any A event.    
