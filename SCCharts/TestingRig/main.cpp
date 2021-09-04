@@ -40,15 +40,15 @@ int printArray(const T *const array, int count, int lowSubscript,
     return total;
 }
 
-#define ARRAY_SIZE 100
+#define ARRAY_SIZE 1000
 
 // Note: These values began as garbage values
 // MUST RESET!!
-#define tAVI      data._FSM_Rev3_local_tAVI
-#define tAEI      data._FSM_Rev3_local_tAEI
-#define tPVARP    data._FSM_Rev3_local__region0_PVARP_tPVARP
-#define tVRP      data._FSM_Rev3_local__region1_VRP_tVRP
-#define tRI       data._FSM_Rev3_local_tRI
+#define tAVI      data._FSM_Rev4_local_tAVI
+#define tAEI      data._FSM_Rev4_local_tAEI
+#define tPVARP    data._FSM_Rev4_local__region0_PVARP_tPVARP
+#define tVRP      data._FSM_Rev4_local__region1_VRP_tVRP
+#define tRI       data._FSM_Rev4_local_tRI
 
 // Note: These values are actually defined in reset(&data)
 #define T_PVARP   data.D_T_PVARP
@@ -79,7 +79,7 @@ int main(int, char**) {
     double aRI[ARRAY_SIZE] = {};
 
     // Initialize deltaT parameters
-    data.myDeltaT = 1;
+    data.globalDeltaT = 1;
     data.deltaT = 1;
     data.sleepT = 0;
 
@@ -129,9 +129,9 @@ int main(int, char**) {
       aA[i] = aAS[i] || aAP[i];
       aV[i] = aVS[i] || aVP[i];
 
-      matlabFile << i+1 << "," << aA[i] << "," << aV[i] << "\n";
+      matlabFile << i << "," << aA[i] << "," << aV[i] << "\n";
 
-      graphFile << i+1 << "," << aAP[i] << "," << aVP[i] << "," << aAS[i] << "," << aVS[i] << "," << aAVI[i] << "," << aAEI[i] << "," << aPVARP[i] << "," << aVRP[i] << "," << aRI[i] << "\n";
+      graphFile << i << "," << aAP[i] << "," << aVP[i] << "," << aAS[i] << "," << aVS[i] << "," << aAVI[i] << "," << aAEI[i] << "," << aPVARP[i] << "," << aVRP[i] << "," << aRI[i] << "\n";
       i += 1;
     }
 
