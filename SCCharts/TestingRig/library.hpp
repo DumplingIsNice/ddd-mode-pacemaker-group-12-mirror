@@ -1,7 +1,7 @@
 #include <cstdio>
 
-#ifndef FSM_REV3_H
-#define FSM_REV3_H
+#ifndef FSM_REV4_H
+#define FSM_REV4_H
 /*
  * Automatically generated C code by
  * KIELER SCCharts - The Key to Efficient Modeling
@@ -9,6 +9,14 @@
  * http://rtsys.informatik.uni-kiel.de/kieler
  */
 
+#define		AVI_VALUE		  30
+#define		AEI_VALUE		  80
+#define		PVARP_VALUE		5
+#define		VRP_VALUE		  15
+#define		LRI_VALUE		  95
+#define		URI_VALUE		  90
+
+#include <stdio.h>
 
 typedef struct {
   char PVARP_Elapsed;
@@ -17,13 +25,13 @@ typedef struct {
   char AVI_Elapsed;
   char URI_Elapsed;
   char LRI_Elapsed;
-  double myDeltaT;
-  double D_T_PVARP;
-  double D_T_VRP;
-  double D_T_AEI;
-  double D_T_AVI;
-  double D_T_URI;
-  double D_T_LRI;
+  double globalDeltaT;
+  int AVI_CONFIG;
+  int AEI_CONFIG;
+  int PVARP_CONFIG;
+  int VRP_CONFIG;
+  int LRI_CONFIG;
+  int URI_CONFIG;
   double deltaT;
   double sleepT;
   char VS;
@@ -38,25 +46,25 @@ typedef struct {
   char _pre_PVARP_Elapsed;
   char _reg_AP;
   char _pre_AP;
-  double _FSM_Rev3_local__region0_PVARP_tPVARP;
-  double _FSM_Rev3_local__region1_VRP_tVRP;
-  char _FSM_Rev3_local__CFSterm;
-  char _FSM_Rev3_local__Atrig;
-  char _FSM_Rev3_local__Atrig1;
-  char _FSM_Rev3_local__Atrig2;
-  char _FSM_Rev3_local__Atrig3;
-  char _FSM_Rev3_local__Atrig4;
-  char _FSM_Rev3_local__Atrig5;
-  char _FSM_Rev3_local__Atrig6;
-  char _FSM_Rev3_local__Atrig7;
-  double _FSM_Rev3_local_tAEI;
-  char _FSM_Rev3_local__Atrig8;
-  char _FSM_Rev3_local__Atrig9;
-  double _FSM_Rev3_local_tAVI;
-  char _FSM_Rev3_local__Atrig10;
-  double _FSM_Rev3_local_tRI;
-  char _FSM_Rev3_local__Atrig11;
-  char _FSM_Rev3_local__Atrig12;
+  double _FSM_Rev4_local__region0_PVARP_tPVARP;
+  double _FSM_Rev4_local__region1_VRP_tVRP;
+  char _FSM_Rev4_local__CFSterm;
+  char _FSM_Rev4_local__Atrig;
+  char _FSM_Rev4_local__Atrig1;
+  char _FSM_Rev4_local__Atrig2;
+  char _FSM_Rev4_local__Atrig3;
+  char _FSM_Rev4_local__Atrig4;
+  char _FSM_Rev4_local__Atrig5;
+  char _FSM_Rev4_local__Atrig6;
+  char _FSM_Rev4_local__Atrig7;
+  double _FSM_Rev4_local_tAEI;
+  char _FSM_Rev4_local__Atrig8;
+  char _FSM_Rev4_local__Atrig9;
+  double _FSM_Rev4_local_tAVI;
+  char _FSM_Rev4_local__Atrig10;
+  double _FSM_Rev4_local_tRI;
+  char _FSM_Rev4_local__Atrig11;
+  char _FSM_Rev4_local__Atrig12;
   char _g4;
   char _g6;
   char _g7;
@@ -422,4 +430,5 @@ void reset(TickData* d);
 void logic(TickData* d);
 void tick(TickData* d);
 
-#endif /* !FSM_REV3_H */
+#endif /* !FSM_REV4_H */
+

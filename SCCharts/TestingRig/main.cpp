@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "library.hpp"
 
 // What are the chars? int
@@ -39,15 +40,15 @@ int printArray(const T *const array, int count, int lowSubscript,
     return total;
 }
 
-#define ARRAY_SIZE 100
+#define ARRAY_SIZE 1000
 
 // Note: These values began as garbage values
 // MUST RESET!!
-#define tAVI      data._FSM_Rev3_local_tAVI
-#define tAEI      data._FSM_Rev3_local_tAEI
-#define tPVARP    data._FSM_Rev3_local__region0_PVARP_tPVARP
-#define tVRP      data._FSM_Rev3_local__region1_VRP_tVRP
-#define tRI       data._FSM_Rev3_local_tRI
+#define tAVI      data._FSM_Rev4_local_tAVI
+#define tAEI      data._FSM_Rev4_local_tAEI
+#define tPVARP    data._FSM_Rev4_local__region0_PVARP_tPVARP
+#define tVRP      data._FSM_Rev4_local__region1_VRP_tVRP
+#define tRI       data._FSM_Rev4_local_tRI
 
 // Note: These values are actually defined in reset(&data)
 #define T_PVARP   data.D_T_PVARP
@@ -78,9 +79,22 @@ int main(int, char**) {
     double aRI[ARRAY_SIZE] = {};
 
     // Initialize deltaT parameters
-    data.myDeltaT = 1;
+    data.globalDeltaT = 1;
     data.deltaT = 1;
     data.sleepT = 0;
+
+    // Setup file to write result in
+    std::ofstream matlabFile;
+    matlabFile.open ("matlab_data.csv");
+    matlabFile << "Time, A, V\n";
+
+    std::ofstream graphFile;
+    graphFile.open ("graph_data.csv");
+    graphFile << "Tick, AP, VP, AS, VS, AVI, AEI, tPVARP, tVRP, tRI\n";
+
+    // Buffer for writing results
+    int aA[ARRAY_SIZE] = {};
+    int aV[ARRAY_SIZE] = {};
 
     int i = 0;
     while(i < ARRAY_SIZE)
@@ -110,29 +124,43 @@ int main(int, char**) {
       printf("tPVARP: %f\n", tPVARP);
       printf("tVRP: %f\n", tVRP);
       printf("################################################\n");
+
+      // Writing to a .csv file
+      aA[i] = aAS[i] || aAP[i];
+      aV[i] = aVS[i] || aVP[i];
+
+      matlabFile << i << "," << aA[i] << "," << aV[i] << "\n";
+
+      graphFile << i << "," << aAP[i] << "," << aVP[i] << "," << aAS[i] << "," << aVS[i] << "," << aAVI[i] << "," << aAEI[i] << "," << aPVARP[i] << "," << aVRP[i] << "," << aRI[i] << "\n";
       i += 1;
     }
 
-    printf("################ DATA FOR EXCEL ################\n");
-    printf("################# INPUT/OUTPUT #################\n");
-    printf("AP:, ");
-    printArray(aAP, ARRAY_SIZE);
-    printf("VP:, ");
-    printArray(aVP, ARRAY_SIZE);
-    printf("AS:, ");
-    printArray(aAS, ARRAY_SIZE);
-    printf("VP:, ");
-    printArray(aVS, ARRAY_SIZE);
-    printf("################# TIMERS ################# \n");
-    printf("AVI:, ");
-    printArray(aAVI, ARRAY_SIZE);
-    printf("AEI:, ");
-    printArray(aAEI, ARRAY_SIZE);
-    printf("tPVARP:, ");
-    printArray(aPVARP, ARRAY_SIZE);
-    printf("tVRP:, ");
-    printArray(aVRP, ARRAY_SIZE);
-    printf("tRI:, ");
-    printArray(aRI, ARRAY_SIZE);
+    matlabFile.close();
+    graphFile.close();
+
+    // printf("################ DATA FOR EXCEL ################\n");
+    // printf("################# INPUT/OUTPUT #################\n");
+    // printf("AP:, ");
+    // printArray(aAP, ARRAY_SIZE);
+    // printf("VP:, ");
+    // printArray(aVP, ARRAY_SIZE);
+    // printf("AS:, ");
+    // printArray(aAS, ARRAY_SIZE);
+    // printf("VP:, ");
+    // printArray(aVS, ARRAY_SIZE);
+    // printf("################# TIMERS ################# \n");
+    // printf("AVI:, ");
+    // printArray(aAVI, ARRAY_SIZE);
+    // printf("AEI:, ");
+    // printArray(aAEI, ARRAY_SIZE);
+    // printf("tPVARP:, ");
+    // printArray(aPVARP, ARRAY_SIZE);
+    // printf("tVRP:, ");
+    // printArray(aVRP, ARRAY_SIZE);
+    // printf("tRI:, ");
+    // printArray(aRI, ARRAY_SIZE);
+
+    return 0;
+
 }
 
