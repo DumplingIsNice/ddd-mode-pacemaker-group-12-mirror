@@ -25,11 +25,7 @@ START_INDEX = 2000;
 [maxTA, maxTV, minTA, minTV] = FindtMinMaxPeriods(T0, START_INDEX);
 
 [periodArray, eventTypeArray] = FindEventPeriods(T0, 3, START_INDEX);   % get events for V
-
 ErrorCheckEventPeriods(periodArray, eventTypeArray, 'RI', LRI_VALUE, URI_VALUE);
-% LRI should not be exceeded. URI may only be exceeded by NATURAL.
-
-ErrorCheckEventPeriods(periodArray, eventTypeArray, 'RI', LRI_VALUE, 0);
 
 
 %% Plot
@@ -122,11 +118,6 @@ function [periodArray, eventTypeArray] = FindEventPeriods(Tdata, col, startIndex
 end
 
 function [] = ErrorCheckEventPeriods(periodArray, eventTypeArray, eventTypeString, upperBound, lowerBound)
-    upperViolationSCount = 0;
-    upperViolationPCount = 0;
-    lowerViolationSCount = 0;
-    lowerViolationPCount = 0;
-
     for i=1:length(periodArray)
         if (periodArray(i) > upperBound)
             if (eventTypeArray(i) > 0)
@@ -140,10 +131,10 @@ function [] = ErrorCheckEventPeriods(periodArray, eventTypeArray, eventTypeStrin
         elseif (periodArray(i) < lowerBound)
             if (eventTypeArray(i) > 0)
                 currentEventType = 'NATURAL';
-                lowerViolationSCount = lowerViolationSCount + 1;
+                lowerViolationSCount = lowerViolationSCount+ 1;
             else
                 currentEventType = 'PACED';
-                lowerViolationPCount = lowerViolationPCount + 1;
+                lowerViolationPCount =+ 1;
             end
             fprintf('%s lower bound violation; undershot by %f; period terminated %s\n', eventTypeString, (lowerBound - periodArray(i)), currentEventType);
         end
@@ -151,13 +142,6 @@ function [] = ErrorCheckEventPeriods(periodArray, eventTypeArray, eventTypeStrin
 
     fprintf('\nTotal upper bound violations: %f (NATURAL = %f, PACED = %f)\n', (upperViolationSCount + upperViolationPCount), upperViolationSCount, upperViolationPCount);
     fprintf('Total lower bound violations: %f (NATURAL = %f, PACED = %f)\n\n', (lowerViolationSCount + lowerViolationPCount), lowerViolationSCount, lowerViolationPCount);
-end
-
-function [] = foo()
-    % V should 
-    tV <= (AEI + AVI)
-    tV <= LRI
-    
 end
 
 
