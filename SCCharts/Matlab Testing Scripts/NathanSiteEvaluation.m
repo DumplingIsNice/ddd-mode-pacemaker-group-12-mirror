@@ -29,6 +29,9 @@ T4 = readtable(dirName + "/test-4.csv");
 % A->A <= (AVI + AEI)
 % V->A <= (LRI + AEI)
 
+% NOTE: 'A->A <= (AVI + AEI)' may be naturally violated if AS occurs soon
+% after a V event, and then halts. 
+
 config.AVI_VALUE	= 300;
 config.AEI_VALUE   = 800;
 config.PVARP_VALUE = 50;
@@ -149,13 +152,13 @@ function [periodAArray, typeAArray, periodVArray, typeVArray] = FindEventDiffere
 end
 
 % Reports periods that exceed the upper bound or are below the lower bound.
-function [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, eventTypeString, upperBound, lowerBound, startIndex, verbose)
+function [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, eventTypeString, upperBound, lowerBound, verbose)
     upperViolationSCount = 0;
     upperViolationPCount = 0;
     lowerViolationSCount = 0;
     lowerViolationPCount = 0;
 
-    for i=startIndex:length(periodArray)
+    for i=1:length(periodArray)
         if (periodArray(i) > upperBound)
             if (eventTypeArray(i) > 0)
                 currentEventType = 'NATURAL';
@@ -165,7 +168,7 @@ function [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArr
                 upperViolationPCount = upperViolationPCount + 1;
             end
             if (verbose == true)
-                fprintf('%s upper bound violation; exceeded by %f at t=%f; period terminated %s\n', eventTypeString, (periodArray(i) - upperBound), startIndex + i, currentEventType);
+                fprintf('%s upper bound violation; exceeded by %f at period=%f; period terminated %s\n', eventTypeString, (periodArray(i) - upperBound), i, currentEventType);
             end
         elseif (periodArray(i) < lowerBound)
             if (eventTypeArray(i) > 0)
@@ -176,7 +179,7 @@ function [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArr
                 lowerViolationPCount = lowerViolationPCount + 1;
             end
             if (verbose == true)
-                fprintf('%s lower bound violation; undershot by %f at t=%f; period terminated %s\n', eventTypeString, (lowerBound - periodArray(i)), startIndex + i, currentEventType);
+                fprintf('%s lower bound violation; undershot by %f at period=%f; period terminated %s\n', eventTypeString, (lowerBound - periodArray(i)), i, currentEventType);
             end
         end
     end
@@ -221,11 +224,11 @@ function [totalNaturalViolations, totalPacedViolations] = EvaluateTestCase(Table
     % V->V
     [periodArray, eventTypeArray] = FindEventPeriods(Table, 3, config.START_INDEX);
     fprintf('%s: V->V:', tableNameString);
-    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, 'RI', config.LRI_VALUE, config.URI_VALUE, config.START_INDEX, config.VERBOSE);
+    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, 'RI', config.LRI_VALUE, config.URI_VALUE, config.VERBOSE);
         % LRI should not be exceeded. URI may only be exceeded by NATURAL.
     totalNaturalViolations = totalNaturalViolations + naturalViolations;
     totalPacedViolations = totalPacedViolations + pacedViolations;
-    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, 'AEI + AVI', config.AEI_VALUE + config.AVI_VALUE, 0, config.START_INDEX, config.VERBOSE);
+    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, 'AEI + AVI', config.AEI_VALUE + config.AVI_VALUE, 0, config.VERBOSE);
         % AEI + AVI should not be exceeded. Lower bound is placeholder.
     totalNaturalViolations = totalNaturalViolations + naturalViolations;
     totalPacedViolations = totalPacedViolations + pacedViolations;
@@ -233,7 +236,7 @@ function [totalNaturalViolations, totalPacedViolations] = EvaluateTestCase(Table
     % A->A
     [periodArray, eventTypeArray] = FindEventPeriods(Table, 2, config.START_INDEX);
     fprintf('%s: A->A:', tableNameString);
-    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, 'AVI + AEI', config.AEI_VALUE + config.AVI_VALUE, 0, config.START_INDEX, config.VERBOSE);
+    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, 'AVI + AEI', config.AEI_VALUE + config.AVI_VALUE, 0, config.VERBOSE);
         % AVI + AEI should not be exceeded. Lower bound is placeholder.
     totalNaturalViolations = totalNaturalViolations + naturalViolations;
     totalPacedViolations = totalPacedViolations + pacedViolations;
@@ -241,13 +244,13 @@ function [totalNaturalViolations, totalPacedViolations] = EvaluateTestCase(Table
     % A->V and V->A
     [periodAArray, typeAArray, periodVArray, typeVArray] = FindEventDifferencesPeriods(Table, config.START_INDEX);
     fprintf('%s: A->V:', tableNameString);
-    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodAArray, typeAArray, 'AVI + AEI + AVI', config.AEI_VALUE + 2*(config.AVI_VALUE), 0, config.START_INDEX, config.VERBOSE);
+    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodAArray, typeAArray, 'AVI + AEI + AVI', config.AEI_VALUE + 2*(config.AVI_VALUE), 0, config.VERBOSE);
         % Should not be exceeded. Lower bound is a placeholder.
     totalNaturalViolations = totalNaturalViolations + naturalViolations;
     totalPacedViolations = totalPacedViolations + pacedViolations;
 
     fprintf('%s: V->A:', tableNameString);
-    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodVArray, typeVArray, 'LRI + AEI', config.LRI_VALUE + config.AEI_VALUE, 0, config.START_INDEX, config.VERBOSE);
+    [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodVArray, typeVArray, 'LRI + AEI', config.LRI_VALUE + config.AEI_VALUE, 0, config.VERBOSE);
         % Should not be exceeded. Lower bound is a placeholder.
     totalNaturalViolations = totalNaturalViolations + naturalViolations;
     totalPacedViolations = totalPacedViolations + pacedViolations;
