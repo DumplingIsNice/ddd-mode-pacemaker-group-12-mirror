@@ -11,8 +11,6 @@ scchart FSM_Rev4 {
   bool  AEI_Elapsed = false, AVI_Elapsed = false
   bool  URI_Elapsed = false, LRI_Elapsed = false
   
-  // Hence, a definable value is declared here to create an interact-able struct field
-  
   // Hardcoded config values
   float globalDeltaT = 1
 //  float PVARP_CONFIG = 8, VRP_CONFIG = 8

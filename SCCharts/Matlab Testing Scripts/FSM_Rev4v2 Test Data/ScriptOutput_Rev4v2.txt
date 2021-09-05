@@ -1,0 +1,149 @@
+Evaluation of CS303 Pacemaker Assignment Test Outputs: C:\Users\OEM\Documents\GitHub\ddd-mode-pacemaker-group-12\SCCharts\Matlab Testing Scripts\FSM_Rev4v2 Test Data
+
+      AVI_VALUE: 300
+      AEI_VALUE: 800
+    PVARP_VALUE: 50
+      VRP_VALUE: 150
+      LRI_VALUE: 950
+      URI_VALUE: 900
+    START_INDEX: 1000
+        VERBOSE: 1
+
+
+=====================================================
+T0 Evaluation
+
+T0: V->V:RI lower bound violation; undershot by 447.000000 at period=1.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=2.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=3.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=4.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=5.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=6.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=7.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=8.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=9.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=10.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=11.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=12.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=13.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=14.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=15.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=16.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=17.000000; period terminated NATURAL
+RI lower bound violation; undershot by 294.000000 at period=18.000000; period terminated NATURAL
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 18.000000 (NATURAL = 18.000000, PACED = 0.000000)
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T0: A->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T0: A->V:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T0: V->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+
+=====================================================
+T1 Evaluation
+
+T1: V->V:RI lower bound violation; undershot by 99.000000 at period=1.000000; period terminated PACED
+RI lower bound violation; undershot by 263.000000 at period=2.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=6.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=10.000000; period terminated NATURAL
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 4.000000 (NATURAL = 3.000000, PACED = 1.000000)
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T1: A->A:AVI + AEI upper bound violation; exceeded by 15.000000 at period=4.000000; period terminated NATURAL
+AVI + AEI upper bound violation; exceeded by 15.000000 at period=8.000000; period terminated NATURAL
+AVI + AEI upper bound violation; exceeded by 15.000000 at period=12.000000; period terminated NATURAL
+
+Total upper bound violations: 3.000000 (NATURAL = 3.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T1: A->V:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T1: V->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+
+=====================================================
+T2 Evaluation
+
+T2: V->V:RI lower bound violation; undershot by 397.000000 at period=1.000000; period terminated PACED
+RI lower bound violation; undershot by 263.000000 at period=2.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=4.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=6.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=8.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=10.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=12.000000; period terminated NATURAL
+RI lower bound violation; undershot by 263.000000 at period=14.000000; period terminated NATURAL
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 8.000000 (NATURAL = 7.000000, PACED = 1.000000)
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T2: A->A:AVI + AEI upper bound violation; exceeded by 206.000000 at period=3.000000; period terminated NATURAL
+AVI + AEI upper bound violation; exceeded by 206.000000 at period=5.000000; period terminated NATURAL
+AVI + AEI upper bound violation; exceeded by 206.000000 at period=7.000000; period terminated NATURAL
+AVI + AEI upper bound violation; exceeded by 206.000000 at period=9.000000; period terminated NATURAL
+AVI + AEI upper bound violation; exceeded by 206.000000 at period=11.000000; period terminated NATURAL
+AVI + AEI upper bound violation; exceeded by 206.000000 at period=13.000000; period terminated NATURAL
+
+Total upper bound violations: 6.000000 (NATURAL = 6.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T2: A->V:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T2: V->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+
+=====================================================
+T3 Evaluation
+
+T3: V->V:RI lower bound violation; undershot by 63.000000 at period=1.000000; period terminated PACED
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 1.000000 (NATURAL = 0.000000, PACED = 1.000000)
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T3: A->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T3: A->V:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T3: V->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+
+=====================================================
+T4 Evaluation
+
+T4: V->V:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T4: A->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T4: A->V:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+T4: V->A:
+Total upper bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+Total lower bound violations: 0.000000 (NATURAL = 0.000000, PACED = 0.000000)
+
+====== OVERALL SUMMARY ======
+Total NATURAL violations: 37.000000; Total PACED violations: 3.000000

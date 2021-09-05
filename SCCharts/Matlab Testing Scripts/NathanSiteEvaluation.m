@@ -43,12 +43,18 @@ config.START_INDEX = 1000;  % Skip n*deltaT settling time.
 config.VERBOSE = true;      % Report timing violations in detail.
 
 clc;
+diary on;
+
+% START
+fprintf('Evaluation of CS303 Pacemaker Assignment Test Outputs: %s\n\n', dirName);
+disp(config);
 
 [naturalViolationsT0, pacedViolationsT0] = EvaluateTestCase(T0, 'T0', config);
 [naturalViolationsT1, pacedViolationsT1] = EvaluateTestCase(T1, 'T1', config);
 [naturalViolationsT2, pacedViolationsT2] = EvaluateTestCase(T2, 'T2', config);
 [naturalViolationsT3, pacedViolationsT3] = EvaluateTestCase(T3, 'T3', config);
 [naturalViolationsT4, pacedViolationsT4] = EvaluateTestCase(T4, 'T4', config);
+
 
 
 totalNaturalViolations = naturalViolationsT0 + naturalViolationsT1 + naturalViolationsT2 + naturalViolationsT3 + naturalViolationsT4;
@@ -68,6 +74,9 @@ PlotVA(T1, 'T1');
 PlotVA(T2, 'T2');
 PlotVA(T3, 'T3');
 PlotVA(T4, 'T4');
+
+
+diary off;
 
 
 %% Functions
@@ -238,6 +247,9 @@ function [totalNaturalViolations, totalPacedViolations] = EvaluateTestCase(Table
     fprintf('%s: A->A:', tableNameString);
     [naturalViolations, pacedViolations] = ErrorCheckEventPeriods(periodArray, eventTypeArray, 'AVI + AEI', config.AEI_VALUE + config.AVI_VALUE, 0, config.VERBOSE);
         % AVI + AEI should not be exceeded. Lower bound is placeholder.
+        % This may be violated when a V signal precedes an A signal by less
+        % than PVARP, preventing AVI from resetting. This is intended (if 
+        % noteworthy) behaviour.
     totalNaturalViolations = totalNaturalViolations + naturalViolations;
     totalPacedViolations = totalPacedViolations + pacedViolations;
 
