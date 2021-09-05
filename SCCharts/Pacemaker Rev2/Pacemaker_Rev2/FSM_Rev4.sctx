@@ -130,32 +130,35 @@ scchart FSM_Rev4 {
     // AVI - When elapsed, must generate VP
     // Resets on any A event.    
     region rAVI {
-      clock tAVI      = 0
-      const int T_AVI = AVI_CONFIG
+      initial state sAVI {
+        clock tAVI      = 0
+        const int T_AVI = AVI_CONFIG
+        
+        initial state Counting {
+          entry do tAVI = globalDeltaT; AVI_Elapsed = false
+        }
+        if (VS||pre(VP)) && pre(VRP_Elapsed) go to Serviced
+        if (pre(AS)) go to CountingAS
+        if tAVI >= T_AVI go to Elapsed
+        
+        state CountingAS {
+          entry do tAVI = globalDeltaT
+        }
+        if (VS||pre(VP)) && pre(VRP_Elapsed) go to Serviced
+        if tAVI >= T_AVI go to Elapsed
+        
+        final state Elapsed {
+          entry do AVI_Elapsed = true
+        }
 
-      // Initial state START!
-      initial state Start {
-      entry do tAVI = globalDeltaT; AVI_Elapsed = false
+        final state Serviced {
+          entry do AVI_Elapsed = false
+        }
       }
-      if (VS||pre(VP)) && pre(VRP_Elapsed) go to Serviced
-      if (tAVI >= T_AVI) go to Elapsed
       
-      state Elapsed {
-        entry do AVI_Elapsed = true
-      }
-      if ((AS||pre(AP)) && pre(PVARP_Elapsed)) go to Start
-      if (pre(AP) && pre(PVARP_Elapsed)) go to Start
-      
-      state Serviced {
-        entry do AVI_Elapsed = false
-      }
-      if ((AS||pre(AP)) && pre(PVARP_Elapsed)) go to Start
-      if (pre(AP) && pre(PVARP_Elapsed)) go to Start
-      
-//      state ResettingAS {
-//        entry do AVI_Elapsed = false
-//      }
-//      if pre(AS) go to Start
+      // Must use previous value - VP resets RP timers.
+      // Similar logic to pre() in AVI, AEI and RI timer.
+      if ((AS||pre(AP)) && pre(PVARP_Elapsed)) abort to sAVI
     }
   
     // Combined LRI, URI region.
