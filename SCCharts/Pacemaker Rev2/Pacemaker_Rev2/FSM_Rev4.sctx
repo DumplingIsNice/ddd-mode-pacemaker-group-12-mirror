@@ -90,7 +90,7 @@ scchart FSM_Rev4 {
       initial state Start {
         entry do tAEI = globalDeltaT; AEI_Elapsed = false
       }
-      if AS && PVARP_Elapsed go to Finished
+      if AS && pre(PVARP_Elapsed) go to Finished
       if tAEI >= T_AEI go to Elapsed
       
       state Elapsed {
@@ -113,7 +113,7 @@ scchart FSM_Rev4 {
       state ResettingVS {
         // nop
       }
-      go to Start
+      if pre(VS) go to Start
     }
     
 
