@@ -99,15 +99,17 @@ scchart FSM_Rev4 {
       /**
        * one tick delay
        */
-      immediate go to PendingReset
+       /*
+        * AEI_Elapsed should only be true for one tick.
+        * This is to prevent consecutive AP events.
+        * 
+        */
+      if (pre(VP)) && pre(VRP_Elapsed) go to Start
+      if (VS) && pre(VRP_Elapsed) go to ResettingVS
+      if (AEI_Elapsed) go to Finished
       
       state Finished {
         entry do AEI_Elapsed = false
-      }
-      immediate go to PendingReset
-      
-      state PendingReset {
-        // nop
       }
       if (pre(VP)) && pre(VRP_Elapsed) go to Start
       if (VS) && pre(VRP_Elapsed) go to ResettingVS
@@ -116,7 +118,7 @@ scchart FSM_Rev4 {
        * Wait one tick
        */
       state ResettingVS {
-        // nop
+        entry do AEI_Elapsed = false
       }
       if pre(VS) go to Start
     }
