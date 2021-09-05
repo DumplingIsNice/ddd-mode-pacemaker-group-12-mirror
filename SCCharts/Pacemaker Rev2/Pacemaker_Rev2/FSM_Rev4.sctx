@@ -143,19 +143,19 @@ scchart FSM_Rev4 {
       state Elapsed {
         entry do AVI_Elapsed = true
       }
-      if (AS && pre(PVARP_Elapsed)) go to ResettingAS
+      if ((AS||pre(AP)) && pre(PVARP_Elapsed)) go to Start
       if (pre(AP) && pre(PVARP_Elapsed)) go to Start
       
       state Serviced {
         entry do AVI_Elapsed = false
       }
-      if (AS && pre(PVARP_Elapsed)) go to ResettingAS
+      if ((AS||pre(AP)) && pre(PVARP_Elapsed)) go to Start
       if (pre(AP) && pre(PVARP_Elapsed)) go to Start
       
-      state ResettingAS {
-        entry do AVI_Elapsed = false
-      }
-      if pre(AS) go to Start
+//      state ResettingAS {
+//        entry do AVI_Elapsed = false
+//      }
+//      if pre(AS) go to Start
     }
   
     // Combined LRI, URI region.
