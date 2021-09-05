@@ -45,7 +45,7 @@ scchart FSM_Rev4 {
        */ 
       
       initial state CountingPostVS {
-        entry do tPVARP = globalDeltaT; PVARP_Elapsed = false
+        entry do tPVARP = 0; PVARP_Elapsed = false
       }
       if tPVARP >= T_PVARP go to Elapsed
       
@@ -57,7 +57,7 @@ scchart FSM_Rev4 {
       state Elapsed {
         entry do PVARP_Elapsed = true
       }
-      if (pre(VS)) go to CountingPostVS
+      if (VS) go to CountingPostVS
       if (pre(VP)) go to CountingPostVP
     }
     
@@ -67,7 +67,7 @@ scchart FSM_Rev4 {
       const int T_VRP = VRP_CONFIG
       
       initial state CountingPostVS {
-        entry do tVRP = globalDeltaT; VRP_Elapsed = false
+        entry do tVRP = 0; VRP_Elapsed = false
       }
       if tVRP >= T_VRP go to Elapsed
       
@@ -79,7 +79,7 @@ scchart FSM_Rev4 {
       state Elapsed {
         entry do VRP_Elapsed = true
       }
-      if (pre(VS)) go to CountingPostVS
+      if (VS) go to CountingPostVS
       if (pre(VP)) go to CountingPostVP
     }
   
@@ -106,7 +106,7 @@ scchart FSM_Rev4 {
       state Finished {
         entry do AEI_Elapsed = false
       }
-      if (VS||VP) && VRP_Elapsed go to Start
+      if (VS||VP) && pre(VRP_Elapsed) go to Start
     }
     
 
