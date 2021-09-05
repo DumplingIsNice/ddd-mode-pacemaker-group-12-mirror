@@ -118,6 +118,12 @@ scchart FSM_Rev4 {
         initial state Counting {
           entry do tAVI = globalDeltaT; AVI_Elapsed = false
         }
+        if (pre(AS)) go to CountingAS
+        if tAVI >= T_AVI go to Elapsed
+        
+        state CountingAS {
+          entry do tAVI = globalDeltaT
+        }
         if tAVI >= T_AVI go to Elapsed
         
         state Elapsed {
@@ -143,11 +149,11 @@ scchart FSM_Rev4 {
         initial state Start {
           entry do tRI = globalDeltaT; URI_Elapsed = false; LRI_Elapsed = false
         }
-        immediate if VS go to StartVS
+        if pre(VS) go to StartVS
         if tRI >= T_URI go to URI_Fin
         
         state StartVS {
-          entry do tRI = 2*globalDeltaT
+          entry do tRI = globalDeltaT
         }
         if tRI >= T_URI go to URI_Fin
         
