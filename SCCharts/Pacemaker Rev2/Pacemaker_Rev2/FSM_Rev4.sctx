@@ -104,7 +104,7 @@ scchart FSM_Rev4 {
       state Finished {
         entry do AEI_Elapsed = false
       }
-      if (VS||VP) && VRP_Elapsed go to Start
+      if (VS||VP) && pre(VRP_Elapsed) go to Start
     }
     
 
