@@ -99,10 +99,15 @@ scchart FSM_Rev4 {
       /**
        * one tick delay
        */
-      if AEI_Elapsed == true go to Finished
+      immediate go to PendingReset
       
       state Finished {
         entry do AEI_Elapsed = false
+      }
+      immediate go to PendingReset
+      
+      state PendingReset {
+        // nop
       }
       if (pre(VP)) && pre(VRP_Elapsed) go to Start
       if (VS) && pre(VRP_Elapsed) go to ResettingVS
