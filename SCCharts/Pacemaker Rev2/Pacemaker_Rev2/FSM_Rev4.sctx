@@ -93,6 +93,9 @@ scchart FSM_Rev4 {
       if AS && pre(PVARP_Elapsed) go to Finished
       if tAEI >= T_AEI go to Elapsed
       
+      /**
+       * transient state
+       */
       state Elapsed {
         entry do AEI_Elapsed = true
       }
@@ -134,18 +137,23 @@ scchart FSM_Rev4 {
         initial state Counting {
           entry do tAVI = globalDeltaT; AVI_Elapsed = false
         }
+        if (VS||pre(VP)) && pre(VRP_Elapsed) go to Serviced
         if (pre(AS)) go to CountingAS
         if tAVI >= T_AVI go to Elapsed
         
         state CountingAS {
           entry do tAVI = globalDeltaT
         }
+        if (VS||pre(VP)) && pre(VRP_Elapsed) go to Serviced
         if tAVI >= T_AVI go to Elapsed
         
-        state Elapsed {
+        final state Elapsed {
           entry do AVI_Elapsed = true
         }
 
+        final state Serviced {
+          entry do AVI_Elapsed = false
+        }
       }
       
       // Must use previous value - VP resets RP timers.
