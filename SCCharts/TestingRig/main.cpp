@@ -1,5 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <vector>
+#include <sstream>
 #include "library.hpp"
 
 // What are the chars? int
@@ -57,30 +60,69 @@ int printArray(const T *const array, int count, int lowSubscript,
 #define T_AVI     data.D_T_AVI
 #define T_URI     data.D_T_URI
 #define T_LRI     data.D_T_LRI
+#define DELTA_T   1
+
+// Author: gunnerfunner
+// Taken From: http://www.cplusplus.com/forum/beginner/204926/
+// Modified by Hao Lin
+void sense_input(int *array)
+{
+    std::string S;
+    getline(std::cin, S);
+    std::istringstream T(S);
+    int i{};
+    std::vector<int>* V = new std::vector<int>;
+
+    while(T >> i)
+    {
+        V ->push_back(i);
+    }
+    for (auto& elem : *V)
+    {
+        array[elem] = 1;
+    }
+}
 
 int main(int, char**) {
 
     printf("Program Running!\n");
+    printf("This exe is for the following paramaters: \n");
+    printf("  AVI: %-3d | AEI: %-3d \n", AVI_VALUE, AEI_VALUE);
+    printf("PVARP: %-3d | VRP: %-3d \n", PVARP_VALUE, VRP_VALUE);
+    printf("  LRI: %-3d | URI: %-3d \n", LRI_VALUE, URI_VALUE);
+    printf("Two .csv files will be generates in the root of this exe.\n");
+    printf("################################################\n");
 
-    TickData data;
-    reset(&data);
+    int inputAS[ARRAY_SIZE] = {0};
+    int inputVS[ARRAY_SIZE] = {0};
+
+    int i = 0;
+
+    // Handles sensing signals
+    std::cout << "Input a string of numbers (any order), each seperated by a blank.\nThe number represents the tick at which the sense signal is generated.\nIf no signal desired, leave it blank.\n";
+    std::cout << "Enter AS: \n";
+    sense_input(inputAS);
+    std::cout << "Enter VS: \n";
+    sense_input(inputVS);
 
     // Initialize arrays to store paramters at each tick
     // For plotting in excel
-    int aAS[ARRAY_SIZE] = {};
-    int aAP[ARRAY_SIZE] = {};
-    int aVS[ARRAY_SIZE] = {};
-    int aVP[ARRAY_SIZE] = {};
+    int aAS[ARRAY_SIZE] = {0};
+    int aAP[ARRAY_SIZE] = {0};
+    int aVS[ARRAY_SIZE] = {0};
+    int aVP[ARRAY_SIZE] = {0};
 
-    double aAEI[ARRAY_SIZE] = {};
-    double aAVI[ARRAY_SIZE] = {};
-    double aPVARP[ARRAY_SIZE] = {};
-    double aVRP[ARRAY_SIZE] = {};
-    double aRI[ARRAY_SIZE] = {};
+    double aAEI[ARRAY_SIZE] = {0};
+    double aAVI[ARRAY_SIZE] = {0};
+    double aPVARP[ARRAY_SIZE] = {0};
+    double aVRP[ARRAY_SIZE] = {0};
+    double aRI[ARRAY_SIZE] = {0};
 
-    // Initialize deltaT parameters
-    data.globalDeltaT = 1;
-    data.deltaT = 1;
+    // Initialize FSM parameters
+    TickData data;
+    reset(&data);
+    data.globalDeltaT = DELTA_T;
+    data.deltaT = DELTA_T;
     data.sleepT = 0;
 
     // Setup file to write result in
@@ -96,11 +138,18 @@ int main(int, char**) {
     int aA[ARRAY_SIZE] = {};
     int aV[ARRAY_SIZE] = {};
 
-    int i = 0;
     while(i < ARRAY_SIZE)
     {
       printf("Tick: %d\n", i);
       reset_inputs(&data);
+      if (inputAS[i] == 1)
+      {
+          data.AS = 1;
+      }
+      if (inputVS[i] == 1)
+      {
+          data.VS = 1;
+      }
       tick(&data);
 
       // Log Parameters
@@ -115,15 +164,16 @@ int main(int, char**) {
       aVRP[i] = tVRP;
       aRI[i] = tRI;
 
-      printf("sleepT: %f \n", data.sleepT);
-      printf("AS: %d | AP: %d \n", data.AS, data.AP);
-      printf("VS: %d | VP: %d \n", data.VS, data.VP);
-      printf("Ri: %f\n", tRI);
-      printf("AVI: %f\n", tAVI);
-      printf("AEI: %f\n", tAEI);
-      printf("tPVARP: %f\n", tPVARP);
-      printf("tVRP: %f\n", tVRP);
-      printf("################################################\n");
+    // Debug Info
+    //   printf("sleepT: %f \n", data.sleepT);
+    //   printf("AS: %d | AP: %d \n", data.AS, data.AP);
+    //   printf("VS: %d | VP: %d \n", data.VS, data.VP);
+    //   printf("Ri: %f\n", tRI);
+    //   printf("AVI: %f\n", tAVI);
+    //   printf("AEI: %f\n", tAEI);
+    //   printf("tPVARP: %f\n", tPVARP);
+    //   printf("tVRP: %f\n", tVRP);
+    //   printf("################################################\n");
 
       // Writing to a .csv file
       aA[i] = aAS[i] || aAP[i];
