@@ -128,7 +128,7 @@ scchart FSM_Rev4 {
       
       // Must use previous value - VP resets RP timers.
       // Similar logic to pre() in AVI, AEI and RI timer.
-      if ((AS||pre(AP)) && pre(PVARP_Elapsed)) abort to sAVI
+      if ((pre(AS)||pre(AP)) && pre(PVARP_Elapsed)) abort to sAVI
     }
   
     // Combined LRI, URI region.
@@ -163,7 +163,7 @@ scchart FSM_Rev4 {
       
       // Must use previous value - VP resets RP timers.
       // Similar logic to pre() in AVI, AEI and RI timer.      
-      if ((VS||pre(VP)) && pre(VRP_Elapsed)) abort to sRI
+      if ((pre(VS)||pre(VP)) && pre(VRP_Elapsed)) abort to sRI
      }
    }
 
