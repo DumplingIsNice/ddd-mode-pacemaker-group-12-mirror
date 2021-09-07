@@ -29,17 +29,13 @@ void handle_tick(void* p_time_count)
 	if (*time_count >= TICK_COUNT)
 	{
 		tick_count++;
+
 		printf("tick:%d\n", tick_count);
-		LED_tick();
+		pulse_LED_tick();
 		(*time_count) = 0;
+
 	} else if (*time_count >= 500){
+		//LED_tick reset logic
 		LED_write(LED_GREEN, LED_0, LOW);
 	}
-}
-
-void LED_tick()
-{
-	LED_write(LED_GREEN, LED_0, HIGH);
-//	usleep(LED_DELAY);
-//	LED_write(LED_GREEN, LED_0, LOW);
 }

@@ -65,58 +65,11 @@ void handle_buttons(void* p_flag_btn)
 					pulse = DEFAULT_PULSE;
 					break;
 			}
-		handle_pulse(pulse);
+
+		write_v = pulse;
 
 		flag_proc = 1;
 		*flag_btn = 0;
 	}
 	return;
-}
-
-void handle_pulse(char p)
-{
-	switch (p)
-	{
-		case V_PULSE:
-			pulse_A();
-			pulse_V();
-			break;
-		case A_PULSE:
-			pulse_V();
-			break;
-		default:
-			break;
-	}
-
-	printf("button prints: %c\n", p);
-}
-
-void reset_pulse()
-{
-	clear_V();
-	clear_A();
-}
-
-void pulse_V()
-{
-	LED_write(LED_RED, LED_V, HIGH);
-//	usleep(LED_DELAY);
-//	clear_V();
-}
-
-void pulse_A()
-{
-	LED_write(LED_GREEN, LED_A, HIGH);
-//	usleep(LED_DELAY);
-//	clear_A();
-}
-
-void clear_V()
-{
-	LED_write(LED_RED, LED_V, LOW);
-}
-
-void clear_A()
-{
-	LED_write(LED_GREEN, LED_A, LOW);
 }

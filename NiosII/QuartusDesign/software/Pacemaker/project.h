@@ -21,13 +21,19 @@
 // Delay functions
 #include <unistd.h>
 // Timer
-#include "sys/alt_alarm.h"
+#include <sys/alt_alarm.h>
+// String
+#include <string.h>
+
+extern char write_v;
+extern char read_v;
 
 // Custom API Libraries
 #include "buttons.h"
 #include "leds.h"
 #include "switches.h"
 #include "timer.h"
+#include "UART.h"
 
 // Example timeout values in milliseconds
 #define AVI_VALUE 	300
@@ -38,6 +44,11 @@
 #define URI_VALUE 	900
 
 // Common macros
+#define A_PULSE 		'A'
+#define V_PULSE 		'V'
+#define DEFAULT_PULSE 	'D'
+#define NO_PULSE 		'N'
+
 #define HIGH 	1
 #define LOW 	0
 #define TRUE	1

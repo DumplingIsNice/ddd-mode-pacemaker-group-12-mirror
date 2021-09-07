@@ -7,6 +7,9 @@
 
 #include "project.h"
 
+char write_v = 'N';
+char read_v = 'N';
+
 int main()
 {
 
@@ -25,10 +28,11 @@ int main()
 
 	while(1)
 		{
+			// Internal SCChart FSM handler
 			handle_tick(p_time_count);
 
-			// Currently Polling, need to find out switches interrupt setup method
-			// switch interrupt is not configured for the given board configuration
+			// Switch interrupt is not configured for the given board configuration
+			// Polling instead
 			handle_switches(&flag_mode1, &flag_mode2);
 
 			// Mode 1 Block
@@ -36,6 +40,7 @@ int main()
 			{
 				EN_BUTTONS_IRQ;
 				handle_buttons(p_flag_btn);
+				handle_pulse_LED(&write_v);
 			}
 
 			// Mode 2 Block
@@ -43,14 +48,20 @@ int main()
 			{
 				DIS_BUTTONS_IRQ;
 				*((int*) p_flag_btn) = 0;
+
+				read_v = 'N';
+				handle_uart(&write_v, &read_v);
+//				write_v = 'N';
+
+				// Echo read value from LEDs
+				echo_LED_read();
 			}
 
 			// LED off logic, Replacement for usleep().
 			if (*((uint*) p_time_count)%100 == 0)
 			{
-				reset_pulse();
+				reset_pulse_LED();
 			}
-
 		}
 	return 0;
 }

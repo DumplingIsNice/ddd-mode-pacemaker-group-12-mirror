@@ -61,3 +61,78 @@ uint set_on_off(uint led_pos, uint current_led_pos, uint is_on)
 
 	return current_led_pos;
 }
+
+void handle_pulse_LED(char* p)
+{
+	if (*p != NO_PULSE)
+	{
+		switch (*p)
+			{
+				case V_PULSE:
+					pulse_LED_VS();
+					break;
+				case A_PULSE:
+					pulse_LED_AS();
+					break;
+				default:
+					;
+			}
+
+		printf("button prints: %c\n", *p);
+		(*p) = NO_PULSE;
+	}
+}
+
+void reset_pulse_LED()
+{
+	clear_LED_VS();
+	clear_LED_AS();
+}
+
+void pulse_LED_VS()
+{
+	LED_write(LED_GREEN, LED_A, HIGH);
+//	usleep(LED_DELAY);
+//	clear_LED_V();
+}
+
+void pulse_LED_AS()
+{
+	LED_write(LED_RED, LED_V, HIGH);
+//	usleep(LED_DELAY);
+//	clear_LED_A();
+}
+
+void clear_LED_VS()
+{
+	LED_write(LED_RED, LED_V, LOW);
+}
+
+void clear_LED_AS()
+{
+	LED_write(LED_GREEN, LED_A, LOW);
+}
+
+void pulse_LED_tick()
+{
+	LED_write(LED_GREEN, LED_0, HIGH);
+//	usleep(LED_DELAY);
+//	LED_write(LED_GREEN, LED_0, LOW);
+}
+
+void echo_LED_read()
+{
+	switch (read_v)
+	{
+		case(V_PULSE):
+			pulse_LED_VS();
+			printf("Read: %c\n", V_PULSE);
+			break;
+		case(A_PULSE):
+			pulse_LED_AS();
+			printf("Read: %c\n", A_PULSE);
+			break;
+		default:
+			;
+	}
+}
