@@ -25,8 +25,8 @@
 // String
 #include <string.h>
 
-extern char write_v;
-extern char read_v;
+extern char sense_v;
+extern char pulse_v;
 
 // Custom API Libraries
 #include "buttons.h"
@@ -34,14 +34,7 @@ extern char read_v;
 #include "switches.h"
 #include "timer.h"
 #include "UART.h"
-
-// Example timeout values in milliseconds
-#define AVI_VALUE 	300
-#define AEI_VALUE 	800
-#define PVARP_VALUE 50
-#define VRP_VALUE 	150
-#define LRI_VALUE 	950
-#define URI_VALUE 	900
+#include "fsm.h"
 
 // Common macros
 #define A_PULSE 		'A'

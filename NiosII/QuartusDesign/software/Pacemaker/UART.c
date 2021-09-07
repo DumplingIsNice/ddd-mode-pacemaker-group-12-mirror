@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void handle_uart(char* write_v, char* read_v)
+void handle_uart(char* s, char* p)
 {
 	// Author: Unknown Contributor
 	// Code taken from: https://community.intel.com/t5/Nios-II-Embedded-Design-Suite/Read-from-UART/m-p/31325
@@ -32,7 +32,7 @@ void handle_uart(char* write_v, char* read_v)
 		// Reads the incoming stream (uart's rxbuffer)
 		uart_rxcount = read(fd, (void*)&uart_rxbuffer, sizeof(uart_rxbuffer));
 
-		(*read_v) = uart_rxbuffer;
+		(*s) = uart_rxbuffer;
 
 		// Reading Debugging Code
 //		if(uart_rxcount > 0)
@@ -41,10 +41,10 @@ void handle_uart(char* write_v, char* read_v)
 //			fprintf(fp, "%c", uart_rxbuffer);
 //		}
 
-		if (*write_v != 'N')
+		if (*p != 'N')
 		{
 			// Use fprintf to write to file (UART's txbuffer)
-			fprintf(fp, "%c", (*write_v));
+			fprintf(fp, "%c", (*p));
 		}
 
 		fclose(fp);

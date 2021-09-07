@@ -32,8 +32,11 @@
  * - LED7 GREEN = VS
  * - LED0 RED 	= AS
  */
-#define LED_A 		LED_7
-#define LED_V 		LED_0
+#define LED_VS 		LED_6
+#define LED_AS 		LED_1
+
+#define LED_VP 		LED_7
+#define LED_AP 		LED_0
 
 #define LED_RED		'r'
 #define LED_GREEN	'g'
@@ -64,17 +67,21 @@ void LED_write(char colour, uint led_pos, uint is_on);
 uint set_on_off(uint led_pos, uint current_led_pos, uint is_on);
 
 // Functions to display current pulses as LED lights
-void handle_pulse_LED(char* p);
+void handle_disp_LED(char* p, char io);
 void reset_pulse_LED();
 void pulse_LED_VS();
 void pulse_LED_AS();
 void clear_LED_VS();
 void clear_LED_AS();
+void pulse_LED_VP();
+void pulse_LED_AP();
+void clear_LED_VP();
+void clear_LED_AP();
 
 void pulse_LED_tick();
 
 // For use with mode 2
 	// Displays the read value from UART
-void echo_LED_read();
+void echo_LED_read(char* r);
 
 #endif /* LEDS_H_ */

@@ -62,24 +62,41 @@ uint set_on_off(uint led_pos, uint current_led_pos, uint is_on)
 	return current_led_pos;
 }
 
-void handle_pulse_LED(char* p)
+void handle_disp_LED(char* p, char io)
 {
 	if (*p != NO_PULSE)
 	{
-		switch (*p)
-			{
-				case V_PULSE:
-					pulse_LED_VS();
-					break;
-				case A_PULSE:
-					pulse_LED_AS();
-					break;
-				default:
-					;
-			}
-
-		printf("button prints: %c\n", *p);
-		(*p) = NO_PULSE;
+		switch(io)
+		{
+			case 's':
+				switch (*p)
+				{
+					case V_PULSE:
+						pulse_LED_VS();
+						break;
+					case A_PULSE:
+						pulse_LED_AS();
+						break;
+					default:
+						;
+				}
+				break;
+			case 'p':
+				switch (*p)
+				{
+					case V_PULSE:
+						pulse_LED_VP();
+						break;
+					case A_PULSE:
+						pulse_LED_AP();
+						break;
+					default:
+						;
+				}
+				break;
+			default:
+				;
+		}
 	}
 }
 
@@ -87,30 +104,60 @@ void reset_pulse_LED()
 {
 	clear_LED_VS();
 	clear_LED_AS();
+	clear_LED_VP();
+	clear_LED_AP();
 }
 
 void pulse_LED_VS()
 {
-	LED_write(LED_GREEN, LED_A, HIGH);
+	LED_write(LED_GREEN, LED_VS, HIGH);
+	printf("Sensed: %c\n", V_PULSE);
 //	usleep(LED_DELAY);
 //	clear_LED_V();
 }
 
 void pulse_LED_AS()
 {
-	LED_write(LED_RED, LED_V, HIGH);
+	LED_write(LED_RED, LED_AS, HIGH);
+	printf("Sensed: %c\n", A_PULSE);
 //	usleep(LED_DELAY);
 //	clear_LED_A();
 }
 
 void clear_LED_VS()
 {
-	LED_write(LED_RED, LED_V, LOW);
+	LED_write(LED_RED, LED_AS, LOW);
 }
 
 void clear_LED_AS()
 {
-	LED_write(LED_GREEN, LED_A, LOW);
+	LED_write(LED_GREEN, LED_VS, LOW);
+}
+
+void pulse_LED_VP()
+{
+	LED_write(LED_GREEN, LED_VP, HIGH);
+	printf("Pulsed: %c\n", V_PULSE);
+//	usleep(LED_DELAY);
+//	clear_LED_V();
+}
+
+void pulse_LED_AP()
+{
+	LED_write(LED_RED, LED_AP, HIGH);
+	printf("Pulsed: %c\n", A_PULSE);
+//	usleep(LED_DELAY);
+//	clear_LED_A();
+}
+
+void clear_LED_VP()
+{
+	LED_write(LED_RED, LED_AP, LOW);
+}
+
+void clear_LED_AP()
+{
+	LED_write(LED_GREEN, LED_VP, LOW);
 }
 
 void pulse_LED_tick()
@@ -120,9 +167,9 @@ void pulse_LED_tick()
 //	LED_write(LED_GREEN, LED_0, LOW);
 }
 
-void echo_LED_read()
+void echo_LED_read(char* r)
 {
-	switch (read_v)
+	switch (*r)
 	{
 		case(V_PULSE):
 			pulse_LED_VS();

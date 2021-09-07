@@ -66,7 +66,7 @@ void handle_buttons(void* p_flag_btn)
 					break;
 			}
 
-		write_v = pulse;
+		sense_v = pulse;
 
 		flag_proc = 1;
 		*flag_btn = 0;

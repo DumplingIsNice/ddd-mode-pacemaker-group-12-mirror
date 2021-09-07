@@ -14,8 +14,9 @@
 #define TIMER_TIMEOUT 	1
 
 // Actual tick time in milliseconds
-#define TICK_COUNT		1000
-#define TICK_COUNT_HALF TICK_COUNT/2
+#define TICK_COUNT			10
+#define TICK_COUNT_TENTH 	(uint)(TICK_COUNT/10)
+#define TICK_COUNT_FIFTH	(uint)5*TICK_COUNT_TENTH
 
 // Set up timer to turn off led instead of delay
 // In microseconds
@@ -27,6 +28,6 @@ alt_u32 timer_isr_function(void* context);
 	// Setup timer count value
 void* timer_init();
 	// Services FSM tick
-void handle_tick(void* p_flag_tick);
+void handle_timer(void* p_time_count, void* p_is_tick);
 
 #endif /* TIMER_H_ */

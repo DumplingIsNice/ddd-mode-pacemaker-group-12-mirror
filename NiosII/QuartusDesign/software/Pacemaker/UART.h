@@ -10,6 +10,6 @@
 
 #include "project.h"
 
-void handle_uart(char* write_v, char* read_v);
+void handle_uart(char* s, char* p);
 
 #endif /* UART_H_ */

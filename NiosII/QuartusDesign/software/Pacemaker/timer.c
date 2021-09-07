@@ -21,20 +21,19 @@ void* timer_init()
 	return p_time_count;
 }
 
-void handle_tick(void* p_time_count)
+void handle_timer(void* p_time_count, void* p_is_tick)
 {
-	static uint tick_count = 0;
+//	static uint tick_count = 0;
+	uint* is_tick = (uint*) p_is_tick;
 	uint* time_count = (uint*) p_time_count;
 
 	if (*time_count >= TICK_COUNT)
 	{
-		tick_count++;
-
-		printf("tick:%d\n", tick_count);
-		pulse_LED_tick();
+//		tick_count++;
+		(*is_tick) = TRUE;
 		(*time_count) = 0;
 
-	} else if (*time_count >= 500){
+	} else if (*time_count >= TICK_COUNT_FIFTH){
 		//LED_tick reset logic
 		LED_write(LED_GREEN, LED_0, LOW);
 	}

@@ -30,6 +30,6 @@
 	 * Flag pointer for mode 1
 	 * Flag pointer for mode 2
 	 */
-void handle_switches(uint* mode1, uint* mode2);
+void handle_switches(uint* p_mode1, uint* p_mode2, uint* p_flag_reset_data);
 
 #endif /* SWITCHES_H_ */
