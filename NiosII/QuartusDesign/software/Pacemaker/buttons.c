@@ -56,10 +56,10 @@ void handle_buttons(void* p_flag_btn)
 		switch (*flag_btn)
 			{
 				case BUTTON_1:
-					pulse = V_PULSE;
+					pulse = A_PULSE;
 					break;
 				case BUTTON_0:
-					pulse = A_PULSE;
+					pulse = V_PULSE;
 					break;
 				default:
 					pulse = DEFAULT_PULSE;
@@ -78,10 +78,10 @@ void handle_pulse(char p)
 	switch (p)
 	{
 		case V_PULSE:
+			pulse_A();
 			pulse_V();
 			break;
 		case A_PULSE:
-			pulse_A();
 			pulse_V();
 			break;
 		default:
@@ -100,15 +100,15 @@ void reset_pulse()
 void pulse_V()
 {
 	LED_write(LED_RED, LED_V, HIGH);
-	usleep(LED_DELAY);
-	clear_V();
+//	usleep(LED_DELAY);
+//	clear_V();
 }
 
 void pulse_A()
 {
 	LED_write(LED_GREEN, LED_A, HIGH);
-	usleep(LED_DELAY);
-	clear_A();
+//	usleep(LED_DELAY);
+//	clear_A();
 }
 
 void clear_V()

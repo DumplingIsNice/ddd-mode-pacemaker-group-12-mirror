@@ -24,9 +24,6 @@
 #define DEFAULT_PULSE 	'D'
 #define NO_PULSE 		'N'
 
-// Set up timer to turn off led instead of delay
-#define LED_DELAY		1000
-
 // Nios II Pushbutton API Macros
 #define GET_BUTTONS 		IORD_ALTERA_AVALON_PIO_EDGE_CAP(BUTTONS_BASE)
 #define CLR_BUTTONS_EDGE 	IOWR_ALTERA_AVALON_PIO_EDGE_CAP(BUTTONS_BASE, 0x0)

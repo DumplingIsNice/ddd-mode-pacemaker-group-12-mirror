@@ -10,8 +10,7 @@
 
 #include "project.h"
 
-// Incomplete, seeking to move to interrupt
-
+// Switches Binary Positions
 #define SWITCH_0	(1 << 0)
 #define SWITCH_1	(1 << 1)
 #define SWITCH_2 	(1 << 2)
@@ -22,7 +21,15 @@
 #define SWITCH_7 	(1 << 7)
 #define SWITCH_ALL 	0x03fff
 
+// Nios II Switchs API Macros
 #define GET_SWITCHES IORD_ALTERA_AVALON_PIO_DATA(SWITCHES_BASE)
+
+// Handles the switching between two modes based on the switch position
+	/*
+	 * Inputs:
+	 * Flag pointer for mode 1
+	 * Flag pointer for mode 2
+	 */
 void handle_switches(uint* mode1, uint* mode2);
 
 #endif /* SWITCHES_H_ */

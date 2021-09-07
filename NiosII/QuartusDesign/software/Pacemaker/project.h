@@ -20,11 +20,14 @@
 #include <stdio.h>
 // Delay functions
 #include <unistd.h>
+// Timer
+#include "sys/alt_alarm.h"
 
 // Custom API Libraries
 #include "buttons.h"
 #include "leds.h"
 #include "switches.h"
+#include "timer.h"
 
 // Example timeout values in milliseconds
 #define AVI_VALUE 	300

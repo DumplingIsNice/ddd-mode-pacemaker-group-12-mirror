@@ -45,6 +45,11 @@
 	// Sets up LED initial status
 void LED_init();
 	// Writes value of LED colour by position
+		/* Inputs:
+		 * color of led - Macro
+		 * binary position of led - logic high, rest logic low
+		 * desired on or off - Macro
+		*/
 void LED_write(char colour, uint led_pos, uint is_on);
 
 // Helper Functions
