@@ -57,6 +57,9 @@ dkms.conf
 *KIELER-Temp/
 SCCharts/Pacemaker/.project
 
+# Quartus
+*.cdf
+
 # Eclipse C project
 *.cproject
 *.project
